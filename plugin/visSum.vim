@@ -33,6 +33,7 @@
 
 " Exit quickly if the script has already been loaded
 let s:this_version = '1.2'
+let s:regexp = '-\?\(\d\+,\)*\d\+\(\.\d\+\)'
 if exists('g:loaded_visSum') && g:loaded_visSum == s:this_version
 	finish
 endif
@@ -64,7 +65,7 @@ else
 endif
 "}}}
 
-function! <SID>SumNumbers_Float(...) range  "{{{
+function! <SID>SumNumbers_Float(...) range  
 	let l:sum = str2float("0.0")
 	let l:cur = ""
 
@@ -72,9 +73,12 @@ function! <SID>SumNumbers_Float(...) range  "{{{
 		let y1      = line("'<")
 		let y2      = line("'>")
 		while y1 <= y2
-			let l:cur = matchstr( getline(y1), '-\?\d\+\(\.\d\+\)\?' )
+			" let l:cur = matchstr( getline(y1), '-\?\d\+\(\.\d\+\)\?' )
+			let l:cur = matchstr( getline(y1), s:regexp )
 			if l:cur == ""
 				let l:cur = "0"
+            else
+                let l:cur = substitute( l:cur, ',', '', "g" )
 			endif
 			let l:sum += eval(l:cur)
 			let y1 += 1
@@ -92,9 +96,12 @@ function! <SID>SumNumbers_Float(...) range  "{{{
 		while y1 <= y2
 			let line = getline(y1)
 			let chunk = strpart(line, x1, len)
-			let l:cur = matchstr( strpart(getline(y1), x1, len), '-\?\d\+\(\.\d\+\)\?' )
+			" let l:cur = matchstr( strpart(getline(y1), x1, len), '-\?\d\+\(\.\d\+\)\?' )
+			let l:cur = matchstr( strpart(getline(y1), x1, len), s:regexp )
 			if l:cur == ""
 				let l:cur = "0"
+            else 
+                let l:cur = substitute( l:cur, ',', '', "g" )
 			endif
 			let l:sum += eval(l:cur)
 			let y1 += 1
@@ -118,7 +125,7 @@ function! <SID>SumNumbers_Float(...) range  "{{{
 	if a:0 == 1 && len(a:1) > 0
 		execute "let @" . a:1 . " = printf('%g', b:sum)"
 	endif
-endfunction "}}}
+endfunction 
 
 function! <SID>SumNumbers_Int(...) range  "{{{
 	let l:sum = 0
