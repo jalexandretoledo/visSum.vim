@@ -33,7 +33,7 @@
 
 " Exit quickly if the script has already been loaded
 let s:this_version = '1.2'
-let s:regexp = '-\?\(\d\+,\)*\d\+\(\.\d\+\)'
+let s:regexp = '-\?\(\d\+,\)*\d\+\(\.\d\+\)\?'
 if exists('g:loaded_visSum') && g:loaded_visSum == s:this_version
 	finish
 endif
